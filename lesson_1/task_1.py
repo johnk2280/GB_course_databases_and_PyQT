@@ -22,12 +22,10 @@ b) Реализовать скрипт, запускающий указанно�
 а используемые функции превратите в методы классов.
 """
 import ipaddress
-import os
-import platform
 import subprocess
 import time
 import threading
-from ipaddress import ip_address
+from ipaddress import ip_address, AddressValueError
 from pprint import pprint
 from typing import Optional
 
@@ -41,7 +39,7 @@ def check_ip_address(value: str) -> ipaddress.IPv4Address:
     try:
         return ip_address(value)
     except ValueError:
-        raise ValueError('Incorrect ip address')
+        raise AddressValueError('Incorrect ip address')
 
 
 def ping(ipv4: ipaddress.IPv4Address, result: dict, get_list: bool) -> str:
@@ -69,7 +67,7 @@ def host_ping(hosts: list, get_list=False) -> Optional[dict]:
         ipv4 = host
         try:
             ipv4 = check_ip_address(host)
-        except ValueError as e:
+        except AddressValueError as e:
             print(f'{host} - {e} воспринимаю как доменное имя')
 
         thread = threading.Thread(
